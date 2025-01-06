@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Result{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <h1>Results</h1>
+    <div class="result-card">
+        <p><strong>Name:</strong> {{ entry.name }}</p>
+        <p><strong>STR Mod:</strong> {{ entry.strmod }}</p>
+        <p><strong>DEX Mod:</strong> {{ entry.dexmod }}</p>
+        <p><strong>CON Mod:</strong> {{ entry.conmod }}</p>
+        <p><strong>INT Mod:</strong> {{ entry.intmod }}</p>
+        <p><strong>WIS Mod:</strong> {{ entry.wismod }}</p>
+        <p><strong>CHA Mod:</strong> {{ entry.chamod }}</p>
+        <p><strong>Date Submitted:</strong> {{ entry.date_submitted.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="button">Submit Another Entry</a>
+</div>
+{% endblock %}
