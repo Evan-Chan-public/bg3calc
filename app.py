@@ -8,7 +8,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 db = SQLAlchemy(app)
 
 class FormData(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     strn = db.Column(db.Integer, nullable=False)
@@ -45,12 +44,13 @@ def index():
         char = int(request.form.get('charisma'))
         
         # Processing
-        strmod = process_data(strn)
-        dexmod = process_data(dext)
-        conmod = process_data(cons)
-        intmod = process_data(intl)
-        wismod = process_data(wisd)
-        chamod = process_data(char)
+        pb_valid = pb_valid(strn, dext, cons, intl, wisd, char)
+        strmod = as_to_mod(strn)
+        dexmod = as_to_mod(dext)
+        conmod = as_to_mod(cons)
+        intmod = as_to_mod(intl)
+        wismod = as_to_mod(wisd)
+        chamod = as_to_mod(char)
         
         # Add to DB
         new_entry = FormData(
@@ -61,6 +61,7 @@ def index():
             intl=intl,
             wisd=wisd,
             char=char,
+            pb_valid = pb_valid,
             strmod=strmod,
             dexmod=dexmod,
             conmod=conmod,
@@ -88,8 +89,17 @@ def result(id):
     return render_template('result.html', entry=entry)
 
 # Data processing logic function
-def process_data(num):
+def as_to_mod(num):
     return (num - 10) / 2
+
+def pb_valid(strn, dext, cons, intl, wisd, char):
+    if(sum(strn, dext, cons, intl, wisd, char) == 27):
+        return "Fully spent!"
+    elif(sum(strn, dext, cons, intl, wisd, char) > 27):
+        return "Over limit. Arrangement invalid."
+    else:
+        return "Under limit. Arrangement invalid."
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
