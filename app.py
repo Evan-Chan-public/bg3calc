@@ -17,6 +17,7 @@ class FormData(db.Model):
     wisd = db.Column(db.Integer, nullable=False)
     char = db.Column(db.Integer, nullable=False)
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
+    pointbuy = db.Column(db.String(100))
     strmod = db.Column(db.Integer)
     dexmod = db.Column(db.Integer)
     conmod = db.Column(db.Integer)
@@ -44,7 +45,7 @@ def index():
         char = int(request.form.get('charisma'))
         
         # Processing
-        pb_valid = pb_valid(strn, dext, cons, intl, wisd, char)
+        pointbuy = pb_valid(strn, dext, cons, intl, wisd, char)
         strmod = as_to_mod(strn)
         dexmod = as_to_mod(dext)
         conmod = as_to_mod(cons)
@@ -61,7 +62,7 @@ def index():
             intl=intl,
             wisd=wisd,
             char=char,
-            pb_valid = pb_valid,
+            pointbuy = pointbuy,
             strmod=strmod,
             dexmod=dexmod,
             conmod=conmod,
@@ -93,9 +94,9 @@ def as_to_mod(num):
     return (num - 10) / 2
 
 def pb_valid(strn, dext, cons, intl, wisd, char):
-    if(sum(strn, dext, cons, intl, wisd, char) == 27):
+    if((strn + dext + cons + intl + wisd + char) == 27):
         return "Fully spent!"
-    elif(sum(strn, dext, cons, intl, wisd, char) > 27):
+    elif((strn + dext + cons + intl + wisd + char) > 27):
         return "Over limit. Arrangement invalid."
     else:
         return "Under limit. Arrangement invalid."
